@@ -66,4 +66,4 @@ void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
     uint8_t pin_mode, uint8_t output_type, uint8_t output_speed,
     uint8_t gpio_pull, uint8_t pin_alternate_func);
 
-void Output_pin_set(GPIO_TypeDef *port, uint8_t pin);
+void Output_pin_set(GPIO_Handle *port, uint8_t pin);
