@@ -24,6 +24,7 @@
 #define GPIO_PORT_ODR_RESET_31_16 0B1U
 #define GPIO_PORT_ODR_SET_15_0 0B1U
 
+#define GPIO_ALTERNATE_FUNC_NO      0b11111u
 #define GPIO_ALTERNATE_FUNC_AF0     0b0000u
 #define GPIO_ALTERNATE_FUNC_AF1     0b0001u
 #define GPIO_ALTERNATE_FUNC_AF2     0b0010u
@@ -64,3 +65,5 @@ typedef struct{
 void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
     uint8_t pin_mode, uint8_t output_type, uint8_t output_speed,
     uint8_t gpio_pull, uint8_t pin_alternate_func);
+
+void Output_pin_set(GPIO_TypeDef *port, uint8_t pin);

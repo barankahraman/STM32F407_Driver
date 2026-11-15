@@ -9,13 +9,13 @@ void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
 
     if(port == GPIOA) MASK = (1u << 0);
     else if(port == GPIOB) MASK = (1u << 1);
-    else if(port == GPIOB) MASK = (1u << 2);
-    else if(port == GPIOB) MASK = (1u << 3);
-    else if(port == GPIOB) MASK = (1u << 4);
-    else if(port == GPIOB) MASK = (1u << 5);
-    else if(port == GPIOB) MASK = (1u << 6);
-    else if(port == GPIOB) MASK = (1u << 7);
-    else if(port == GPIOB) MASK = (1u << 8);
+    else if(port == GPIOC) MASK = (1u << 2);
+    else if(port == GPIOD) MASK = (1u << 3);
+    else if(port == GPIOE) MASK = (1u << 4);
+    else if(port == GPIOF) MASK = (1u << 5);
+    else if(port == GPIOG) MASK = (1u << 6);
+    else if(port == GPIOH) MASK = (1u << 7);
+    else if(port == GPIOI) MASK = (1u << 8);
 
     RCC -> AHB1ENR |= MASK; 
     
@@ -39,14 +39,25 @@ void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
     port ->port_register ->PUPDR &= ~(0b11u << (port->specs->pin_no)*2);
     port ->port_register ->PUPDR |= ((port ->specs-> gpio_pull_up_down) << (port->specs->pin_no)*2);
 
-    if(port -> specs ->pin_no <= 7){
-        port -> port_register -> AFR[0] &= ~(0b1111u << (port -> specs->pin_no)*4);
-        port -> port_register -> AFR[0] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
-    }
-    else{
-        port -> port_register -> AFR[1] &= ~(0b1111u << (port -> specs->pin_no)*4);
-        port -> port_register -> AFR[1] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
+    if(pin_alternate_func != 0b11111u)
+        {
+            if(port -> specs ->pin_no <= 7){
+            port -> port_register -> AFR[0] &= ~(0b1111u << (port -> specs->pin_no)*4);
+            port -> port_register -> AFR[0] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
+        }
+        else{
+            port -> port_register -> AFR[1] &= ~(0b1111u << (port -> specs->pin_no)*4);
+            port -> port_register -> AFR[1] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
+        }
     }
 
+}
 
+void Output_pin_set(GPIO_Handle *port, uint8_t pin){
+    GPIO_init(
+        port,pin,GPIO_PORT_MODE_OUTPUT,GPIO_PORT_OUTPUT_TYPE_PP,
+        GPIO_PORT_OUTPUT_SPEED_HIGH, GPIO_PORT_PULLUP_PULLDOWN_NO, GPIO_ALTERNATE_FUNC_NO
+    );
+
+    port -> port_register -> BSRR |= (BIT_SET << (port -> specs ->pin_no));
 }
