@@ -63,4 +63,3 @@ void Output_pin_set(GPIO_TypeDef *port, uint8_t pin){
 
     port -> BSRR |= (BIT_SET << pin);
 }
-
