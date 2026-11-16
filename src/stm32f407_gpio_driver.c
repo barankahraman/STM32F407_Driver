@@ -1,11 +1,14 @@
 #include "stm32f407_gpio_driver.h"
 #include "stm32f407xx.h"
 
-void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
+void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
     uint8_t pin_mode, uint8_t output_type, uint8_t output_speed,
     uint8_t gpio_pull, uint8_t pin_alternate_func){
 
+
+    GPIO_Handle *port_handle;
     uint8_t MASK;
+
 
     if(port == GPIOA) MASK = (1u << 0);
     else if(port == GPIOB) MASK = (1u << 1);
@@ -19,45 +22,45 @@ void GPIO_init(GPIO_Handle *port, uint8_t pin_number,
 
     RCC -> AHB1ENR |= MASK; 
     
-    port -> specs -> pin_no = pin_number;
-    port -> specs -> gpio_mode = pin_mode;
-    port -> specs -> gpio_output_type = output_type;
-    port -> specs -> gpio_output_speed = output_speed;
-    port -> specs -> gpio_pull_up_down = gpio_pull;
-    port -> specs -> gpio_alternate_function_no = pin_alternate_func;
+    port_handle -> specs.pin_no = pin_number;
+    port_handle -> specs.gpio_mode = pin_mode;
+    port_handle -> specs.gpio_output_type = output_type;
+    port_handle -> specs.gpio_output_speed = output_speed;
+    port_handle -> specs.gpio_pull_up_down = gpio_pull;
+    port_handle -> specs.gpio_alternate_function_no = pin_alternate_func;
 
     
-    port -> port_register -> MODER &= ~(1 << (port ->specs ->pin_no)*2);
-    port -> port_register -> MODER |= ((port -> specs ->gpio_mode) << (port->specs->pin_no)*2);
+    port  -> MODER &= ~(1 << (port_handle ->specs.pin_no)*2);
+    port  -> MODER |= ((port_handle -> specs.gpio_mode) << (port_handle->specs.pin_no)*2);
 
-    port -> port_register -> OTYPER &= ~(1 << (port -> specs ->pin_no));
-    port -> port_register -> OTYPER |= ((port->specs->gpio_output_type)<<(port->specs->pin_no));
+    port -> OTYPER &= ~(1 << (port_handle -> specs.pin_no));
+    port -> OTYPER |= ((port_handle->specs.gpio_output_type)<<(port_handle->specs.pin_no));
 
-    port -> port_register -> OSPEEDR &= ~(1 << (port ->specs->pin_no)*2);
-    port -> port_register -> OSPEEDR |= ((port->specs->gpio_output_speed) << (port->specs->pin_no)*2);
+    port -> OSPEEDR &= ~(1 << (port_handle ->specs.pin_no)*2);
+    port -> OSPEEDR |= ((port_handle->specs.gpio_output_speed) << (port_handle->specs.pin_no)*2);
 
-    port ->port_register ->PUPDR &= ~(0b11u << (port->specs->pin_no)*2);
-    port ->port_register ->PUPDR |= ((port ->specs-> gpio_pull_up_down) << (port->specs->pin_no)*2);
+    port -> PUPDR &= ~(0b11u << (port_handle->specs.pin_no)*2);
+    port -> PUPDR |= ((port_handle ->specs.gpio_pull_up_down) << (port_handle->specs.pin_no)*2);
 
     if(pin_alternate_func != 0b11111u)
         {
-            if(port -> specs ->pin_no <= 7){
-            port -> port_register -> AFR[0] &= ~(0b1111u << (port -> specs->pin_no)*4);
-            port -> port_register -> AFR[0] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
+            if(port_handle -> specs.pin_no <= 7){
+            port -> AFR[0] &= ~(0b1111u << (port_handle -> specs.pin_no)*4);
+            port -> AFR[0] |= ((port_handle ->specs.gpio_alternate_function_no) << (port_handle -> specs.pin_no)*4);
         }
         else{
-            port -> port_register -> AFR[1] &= ~(0b1111u << (port -> specs->pin_no)*4);
-            port -> port_register -> AFR[1] |= ((port ->specs->gpio_alternate_function_no) << (port -> specs->pin_no)*4);
+            port -> AFR[1] &= ~(0b1111u << (port_handle -> specs.pin_no)*4);
+            port -> AFR[1] |= ((port_handle ->specs.gpio_alternate_function_no) << (port_handle -> specs.pin_no)*4);
         }
     }
 
 }
 
-void Output_pin_set(GPIO_Handle *port, uint8_t pin){
+void Output_pin_set(GPIO_TypeDef *port, uint8_t pin){
     GPIO_init(
         port,pin,GPIO_PORT_MODE_OUTPUT,GPIO_PORT_OUTPUT_TYPE_PP,
-        GPIO_PORT_OUTPUT_SPEED_HIGH, GPIO_PORT_PULLUP_PULLDOWN_NO, GPIO_ALTERNATE_FUNC_NO
-    );
+        GPIO_PORT_OUTPUT_SPEED_HIGH, GPIO_PORT_PULLUP_PULLDOWN_NO, GPIO_ALTERNATE_FUNC_NO);
 
-    port -> port_register -> BSRR |= (BIT_SET << (port -> specs ->pin_no));
+    port -> BSRR |= (BIT_SET << pin);
 }
+
