@@ -65,3 +65,5 @@ void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
     uint8_t gpio_pull, uint8_t pin_alternate_func);
 
 void Output_pin_set(GPIO_TypeDef *port, uint8_t pin);
+
+void Send_Byte(char *text);

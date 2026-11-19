@@ -63,3 +63,14 @@ void Output_pin_set(GPIO_TypeDef *port, uint8_t pin){
 
     port -> BSRR |= (BIT_SET << pin);
 }
+
+void Send_Byte(char *text){
+    while(*text != "\0"){
+        USART1 -> DR = text;
+        while(!(USART1 ->SR && (1 << 7))){}
+    }
+
+    
+    // Baud rate register (mantissa and fraction)
+    // control register
+}
