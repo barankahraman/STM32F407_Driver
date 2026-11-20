@@ -1,4 +1,5 @@
 #include "stm32f407_gpio_driver.h"
+#include "stm32f407_comm_driver.h"
 #include "stm32f407xx.h"
 
 void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
@@ -8,7 +9,6 @@ void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
 
     GPIO_Handle *port_handle;
     uint8_t MASK;
-
 
     if(port == GPIOA) MASK = (1u << 0);
     else if(port == GPIOB) MASK = (1u << 1);
@@ -29,7 +29,8 @@ void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
     port_handle -> specs.gpio_pull_up_down = gpio_pull;
     port_handle -> specs.gpio_alternate_function_no = pin_alternate_func;
 
-    
+
+
     port  -> MODER &= ~(1 << (port_handle ->specs.pin_no)*2);
     port  -> MODER |= ((port_handle -> specs.gpio_mode) << (port_handle->specs.pin_no)*2);
 
@@ -62,15 +63,4 @@ void Output_pin_set(GPIO_TypeDef *port, uint8_t pin){
         GPIO_PORT_OUTPUT_SPEED_HIGH, GPIO_PORT_PULLUP_PULLDOWN_NO, GPIO_ALTERNATE_FUNC_NO);
 
     port -> BSRR |= (BIT_SET << pin);
-}
-
-void Send_Byte(char *text){
-    while(*text != "\0"){
-        USART1 -> DR = text;
-        while(!(USART1 ->SR && (1 << 7))){}
-    }
-
-    
-    // Baud rate register (mantissa and fraction)
-    // control register
 }

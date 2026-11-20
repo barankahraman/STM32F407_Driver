@@ -66,4 +66,3 @@ void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
 
 void Output_pin_set(GPIO_TypeDef *port, uint8_t pin);
 
-void Send_Byte(char *text);
