@@ -20,7 +20,7 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
 
     uint8_t usart_mask;
 
-    if(usart_type == (USART1 || USART6)){
+    if((usart_type == USART1) || (usart_type == USART6)){
         if(usart_type == USART1){
             usart_mask = (1 << 4);
         }
@@ -30,7 +30,7 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
         RCC -> APB2ENR |= usart_mask;
     }
 
-    else if(usart_type == (USART2 || USART3 || UART4 || UART5)){
+    else if((usart_type == USART2) || (usart_type == USART3) || (usart_type == UART4) || (usart_type == UART5)){
         if(usart_type == USART2){
             usart_mask = (1 << 17);
         }
@@ -50,10 +50,28 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
 
 
 void Send_Byte(char *text, USART_TypeDef *usart_type, 
-    GPIO_TypeDef *port, uint8_t pin, uint8_t baud_rate){
+    GPIO_TypeDef *port, uint8_t pin, float baud_rate, 
+    float clock_speed, float oversampling){
+
+    USART_init(usart_type,port,pin);
+    uint8_t USART_DIV;
+
+    USART_DIV = ((clock_speed / oversampling)/baud_rate);
+
+    uint8_t usart_mantissa = (int) USART_DIV;
+    float usart_fraction = USART_DIV - ((float)usart_mantissa);
+    usart_fraction = (int)((usart_fraction * oversampling) + 0.5);
+    if(usart_fraction == oversampling) {usart_mantissa++; usart_fraction = 0;}
+    usart_type ->BRR = ((usart_mantissa << 4) | ((int) usart_fraction << 0));
+    // BRR should not be "OR"ed because we do not want previous values from
+    // the previous transmission
     
-    
-    // control register
+    if(oversampling == 8.0) usart_type -> CR1 |= (1<<15);
+    else usart_type ->CR1 &= ~(1u << 15);
+
+    usart_type -> CR1 |= (1 << 3);
+    usart_type -> CR1 |= (1 << 13);
+
 
     while(*text != "\0"){
         usart_type -> DR = *text;
