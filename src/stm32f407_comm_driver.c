@@ -18,7 +18,7 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
     }
 
 
-    uint8_t usart_mask;
+    int usart_mask;
 
     if((usart_type == USART1) || (usart_type == USART6)){
         if(usart_type == USART1){
@@ -32,16 +32,16 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
 
     else if((usart_type == USART2) || (usart_type == USART3) || (usart_type == UART4) || (usart_type == UART5)){
         if(usart_type == USART2){
-            usart_mask = (1 << 17);
+            usart_mask = (1u << 17);
         }
         else if(usart_type == USART3){
-            usart_mask = (1 << 18);
+            usart_mask = (1u << 18);
         }
         else if(usart_type == UART4){
-            usart_mask = (1 << 19);
+            usart_mask = (1u << 19);
         }
         else if(usart_type == UART5){
-            usart_mask = (1 << 20);
+            usart_mask = (1u << 20);
         }
         
         RCC -> APB1ENR |= usart_mask;
@@ -54,11 +54,11 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
     float clock_speed, float oversampling){
 
     USART_init(usart_type,port,pin);
-    uint8_t USART_DIV;
+    float USART_DIV;
 
     USART_DIV = ((clock_speed / oversampling)/baud_rate);
 
-    uint8_t usart_mantissa = (int) USART_DIV;
+    uint32_t usart_mantissa = (int) USART_DIV;
     float usart_fraction = USART_DIV - ((float)usart_mantissa);
     usart_fraction = (int)((usart_fraction * oversampling) + 0.5);
     if(usart_fraction == oversampling) {usart_mantissa++; usart_fraction = 0;}
@@ -73,9 +73,9 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
     usart_type -> CR1 |= (1 << 13);
 
 
-    while(*text != "\0"){
+    while(*text != '\0'){
         usart_type -> DR = *text;
-        while(!(usart_type ->SR && (1 << 7))){}
+        while(!(usart_type ->SR & (1 << 7))){}
         text++;
     }
 
