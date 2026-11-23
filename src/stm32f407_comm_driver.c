@@ -1,6 +1,6 @@
 #include "stm32f407_comm_driver.h"
 #include "stm32f407_gpio_driver.h"
-//IMPLEMENT THE GPIO_init inside it so that usart/uart can work
+
 void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
     uint8_t pin){
 
@@ -22,10 +22,10 @@ void USART_init(USART_TypeDef *usart_type, GPIO_TypeDef *port,
 
     if((usart_type == USART1) || (usart_type == USART6)){
         if(usart_type == USART1){
-            usart_mask = (1 << 4);
+            usart_mask = (1u << 4);
         }
         else if(usart_type == USART6){
-            usart_mask = (1 << 6);
+            usart_mask = (1u << 5);
         }
         RCC -> APB2ENR |= usart_mask;
     }
@@ -74,8 +74,7 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
 
 
     while(*text != '\0'){
-        
-        while(!(usart_type ->SR & (1 << 7))){}
+        while(!((usart_type ->SR) & (1 << 7))){}
         usart_type -> DR = *text;
         text++;
     }
