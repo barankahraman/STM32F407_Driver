@@ -50,7 +50,7 @@ typedef struct{
     uint8_t gpio_output_type;
     uint8_t gpio_output_speed;
     uint8_t gpio_pull_up_down;
-    uint8_t gpio_alternate_function_no;
+    uint32_t gpio_alternate_function_no;
 }GPIO_Specs;
 
 typedef struct{
@@ -62,7 +62,7 @@ typedef struct{
 
 void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
     uint8_t pin_mode, uint8_t output_type, uint8_t output_speed,
-    uint8_t gpio_pull, uint8_t pin_alternate_func);
+    uint8_t gpio_pull, uint32_t pin_alternate_func);
 
 void Output_pin_set(GPIO_TypeDef *port, uint8_t pin);
 

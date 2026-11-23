@@ -74,8 +74,9 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
 
 
     while(*text != '\0'){
-        usart_type -> DR = *text;
+        
         while(!(usart_type ->SR & (1 << 7))){}
+        usart_type -> DR = *text;
         text++;
     }
 
