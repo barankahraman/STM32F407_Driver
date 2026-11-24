@@ -81,3 +81,39 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
 
 
 }
+
+void SPI_init(){
+    // SPI (Serial Peripheral Interface): Like UART, it sends data one bit at a time. The main difference
+    // is that SPI has a separate-clock wire. STM32 generates the clock, 
+    // and the other chip uses it to know when to read each bit. 
+    
+    // SCK: Serial clock. Sets the timing of the transfer (STM -> device)
+    // MOSI: Master Out, Slave In: Carries data sent by STM (STM -> device)
+    // MISO: Master In, Slave Out: Carries data returned by the device (device -> STM)
+    // CS or NSS: Chip select. Usually pulled low to select the device (STM -> device)
+
+    // SPI loopback:
+
+    // SPI2_SCK = PB13, AF5
+    // SPI2_MISO = PB14, AF5
+    // SPI2_MOSI = PB15, AF5
+    // SPI2_NSS = PB12, AF5
+
+    GPIO_init(GPIOB,13,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+    GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+    GPIO_ALTERNATE_FUNC_AF5);
+
+    GPIO_init(GPIOB,14,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+    GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+    GPIO_ALTERNATE_FUNC_AF5);
+
+    GPIO_init(GPIOB,15,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+    GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+    GPIO_ALTERNATE_FUNC_AF5);
+
+    GPIO_init(GPIOB,12,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+    GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+    GPIO_ALTERNATE_FUNC_AF5);
+    
+
+}
