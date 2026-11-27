@@ -32,13 +32,13 @@ void GPIO_init(GPIO_TypeDef *port, uint8_t pin_number,
 
 
 
-    port  -> MODER &= ~(0b11 << (port_handle.specs.pin_no)*2);
+    port  -> MODER &= ~(0b11u << (port_handle.specs.pin_no)*2);
     port  -> MODER |= ((port_handle.specs.gpio_mode) << (port_handle.specs.pin_no)*2);
 
     port -> OTYPER &= ~(1u << port_handle.specs.pin_no);
     port -> OTYPER |= ((port_handle.specs.gpio_output_type)<<port_handle.specs.pin_no);
 
-    port -> OSPEEDR &= ~(0b11 << (port_handle.specs.pin_no)*2);
+    port -> OSPEEDR &= ~(0b11u << (port_handle.specs.pin_no)*2);
     port -> OSPEEDR |= ((port_handle.specs.gpio_output_speed) << (port_handle.specs.pin_no)*2);
 
     port -> PUPDR &= ~(0b11u << (port_handle.specs.pin_no)*2);
