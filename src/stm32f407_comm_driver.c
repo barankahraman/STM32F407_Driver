@@ -82,7 +82,7 @@ void Send_Byte(char *text, USART_TypeDef *usart_type,
 
 }
 
-void SPI_init(uint8_t spi_number, GPIO_TypeDef *port){
+void SPI_init(uint8_t spi_number, GPIO_TypeDef *port, uint8_t pin){
     // SPI (Serial Peripheral Interface): Like UART, it sends data one bit at a time. The main difference
     // is that SPI has a separate-clock wire. STM32 generates the clock, 
     // and the other chip uses it to know when to read each bit. 
@@ -98,80 +98,20 @@ void SPI_init(uint8_t spi_number, GPIO_TypeDef *port){
     // SPI2_MISO = PB14, AF5
     // SPI2_MOSI = PB15, AF5
     // SPI2_NSS = PB12, AF5
-    if(spi_number == 2){
-        if(port == GPIOB){
-            GPIO_init(GPIOB,13,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,14,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,15,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,12,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-        }
-
-        else if(port == GPIOC){
-            GPIO_init(GPIOB,10,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOC,2,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOC,3,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,9,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5); 
-        }
-    }
-
-    if(spi_number == 1){
-        if(port == GPIOA){
-            GPIO_init(GPIOA,5,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOA,6,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOA,7,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOA,4,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-        }
-        else if(port == GPIOB){
-            GPIO_init(GPIOB,3,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,4,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOB,5,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-
-            GPIO_init(GPIOA,15,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
-            GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
-            GPIO_ALTERNATE_FUNC_AF5);
-        }
     
+    if((spi_number == 1) || (spi_number == 2)){
+        GPIO_init(port,pin,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+        GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+        GPIO_ALTERNATE_FUNC_AF5);
     }
+
+    else{
+        GPIO_init(port,pin,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
+        GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
+        GPIO_ALTERNATE_FUNC_AF6);
+    }
+
+
+
 
 }
