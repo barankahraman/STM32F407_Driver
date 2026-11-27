@@ -98,7 +98,24 @@ void SPI_init(uint8_t spi_number, GPIO_TypeDef *port, uint8_t pin){
     // SPI2_MISO = PB14, AF5
     // SPI2_MOSI = PB15, AF5
     // SPI2_NSS = PB12, AF5
+
+    if(spi_number == 1){
+        RCC -> APB2ENR |= (1u << 12);
+    }
+
+    else if(spi_number == 2){
+        RCC -> APB1ENR |= (1u << 14);
+    }
+
+    else if(spi_number == 3){
+        RCC -> APB1ENR |= (1u << 15);
+    }
     
+    else return;
+
+    }
+
+
     if((spi_number == 1) || (spi_number == 2)){
         GPIO_init(port,pin,GPIO_PORT_MODE_AF,GPIO_PORT_OUTPUT_TYPE_PP,
         GPIO_PORT_OUTPUT_SPEED_HIGH,GPIO_PORT_PULLUP_PULLDOWN_NO,
